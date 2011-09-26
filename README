@@ -1,0 +1,6 @@
+Instalación: 
+Copiar el script al path
+sudo chmod +x busca, para hacerlo ejecutable
+
+Uso:
+Escribe: busca funcion o busca name.space dentro de un proyecto (un directorio arriba de la carpeta src)

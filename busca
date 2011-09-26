@@ -1,0 +1,52 @@
+#!/bin/bash
+
+# busca nombrefuncion o busca name.space para que busque en q archivo se definen y cuales lo ocupan
+
+DIR=$(basename `pwd`)
+
+function busca_ns {
+	NS_FILE=$(echo `grep -rEl "\(ns $1" src`)
+	
+	if [ -z $NS_FILE ]; then
+		echo "No se encontro el archivo para ns, verifique que sea correcto"
+	else
+		echo "El archivo del ns " $1 " es " $NS_FILE
+		busca_uses $1
+	fi
+}
+
+
+
+function busca_uses {
+	PRJ_PART=`echo $1 | grep -oE "^[^.]+"` # dividimos el nombre del ns en 2 partes tomando de referencia el .
+	FILE_PART=`echo $1 | grep -oE "[^.]+$"`
+	F_U=$(echo `grep -rEl $1 src/`)     # buscamos todas las partes donde aparesca el ns de forma normal
+	F_U2=$(echo `grep -rEl "\[$PRJ_PART[a-z ]+$FILE_PART" src/`)  # buscamos todas las partes donde aparesca el ns en un vector pe. [name core space otrons]
+	echo "Se usa en los siguientes archivos:"
+	Fs=$F_U$FU2
+	for i in $Fs; do echo $i; done
+	# echo $FILES_USES_GOD
+
+}
+
+function defn_f {
+   DEFN_FILE=$(echo `grep -rEl "(\(defn $1 |\(defmacro $1 |\(def $1 )" src`)
+   if [ -z $DEFN_FILE ]; then
+		echo "No se encontro donde se definio la funcion, verifique que sea correcta"
+	else
+		echo "El archivo donde la funcion " $1 " esta definida es:" $DEFN_FILE
+		busca_uses $1
+	fi
+}
+
+function busca_f {
+	F_USES=$(echo `grep -roE $1 src/`)
+	FS=$(echo `grep -roE `)
+}
+
+if [[ $1 == *.* ]];
+	then 
+		busca_ns $1
+	else
+		defn_f  $1
+fi
